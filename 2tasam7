@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 لعبة أبطال السلام التفاعلية 🌟</title>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #ff9800;
+            --success-color: #4caf50;
+            --bg-color: #e8f5e9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Changa', 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#c8e6c9 20%, transparent 20%), radial-gradient(#c8e6c9 20%, transparent 20%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 6px solid #81c784;
+            max-width: 850px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* رأس الصفحة */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: #ffecb3;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px dashed #ffb300;
+        }
+
+        .header h1 {
+            color: #e65100;
+            margin: 0;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px #fff;
+        }
+
+        .header p {
+            color: #5d4037;
+            font-size: 1.2rem;
+            margin: 5px 0 0 0;
+            font-weight: bold;
+        }
+
+        /* قسم الكلمات المراد سحبها */
+        .words-bank {
+            background: #f1f8e9;
+            border: 3px solid #c5e1a5;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .drag-word {
+            background: linear-gradient(135deg, #ffb74d, #ff9800);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: grab;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .drag-word:active { cursor: grabbing; transform: scale(0.95); }
+        .drag-word:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255, 152, 0, 0.6); }
+
+        /* خريطة المفاهيم */
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .map-grid { grid-template-columns: 1fr; }
+        }
+
+        .section-box {
+            background: #f9fbe7;
+            border: 3px solid #dce775;
+            border-radius: 25px;
+            padding: 20px;
+        }
+
+        .section-box.summary {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #2e7d32;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #dce775;
+            padding-bottom: 5px;
+        }
+
+        .section-box.summary .section-title { color: #1565c0; border-color: #90caf9; }
+
+        /* أسطر السحب والإفلات */
+        .map-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            border: 2px solid #f0f4c3;
+        }
+
+        .word-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3e2723;
+        }
+
+        .drop-target {
+            border: 3px dashed #b0bec5;
+            background: #eceff1;
+            min-width: 160px;
+            min-height: 45px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            padding: 2px;
+        }
+
+        .drop-target.hovered {
+            background: #ffe082;
+            border-color: #ffb300;
+            transform: scale(1.05);
+        }
+
+        /* قسم الأسئلة */
+        .quiz-section {
+            background: #fff3e0;
+            border: 3px dashed #ffcc80;
+            border-radius: 25px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .quiz-title {
+            color: #e65100;
+            font-size: 1.4rem;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ffe0b2;
+        }
+
+        .question-card p { margin: 0 0 10px 0; font-weight: bold; color: #424242; font-size: 1.1rem; }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: right;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover { background: #f5f5f5; border-color: #bdbdbd; }
+        
+        .option-btn.selected {
+            background: #e0f7fa;
+            border-color: #00bcd4;
+            color: #006064;
+        }
+
+        /* زر التأكيد والنتيجة */
+        .submit-area {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            font-family: 'Changa', sans-serif;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6); }
+
+        .result-box {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 15px;
+        }
+
+        .bounce { animation: bounce 0.5s infinite alternate; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+    </style>
+</head>
+<body>
+
+<div class="game-card">
+    <div class="header">
+        <h1><i class="fa-solid fa-star-and-crecent"></i> لعبة أبطال السلام التفاعلية <i class="fa-solid fa-star-and-crecent"></i></h1>
+        <p>اكتشف معاني حديث النبي ﷺ وعش بخلق التسامح والمحبة 💖</p>
+    </div>
+
+    <div class="words-bank" id="wordsBank">
+        <div class="drag-word" draggable="true" id="word-correct1"><i class="fa-solid fa-handshake-slash"></i> يخاصمه ويقاطعه</div>
+        <div class="drag-word" draggable="true" id="word-correct2"><i class="fa-solid fa-ban"></i> لا يجوز شرعاً</div>
+        <div class="drag-word" draggable="true" id="word-correct3"><i class="fa-solid fa-arrows-left-right"></i> يُعرِض ويَصُدّ</div>
+    </div>
+
+    <div class="map-grid">
+        <div class="section-box">
+            <h3 class="section-title"><i class="fa-solid fa-circle-info"></i> ملخص معاني الكلمات</h3>
+            
+            <div class="map-row">
+                <span class="word-label">يُعْرِضُ:</span>
+                <div class="drop-target" data-accept="word-correct3"></div>
+            </div>
+
+            <div class="map-row">
+                <span class="word-label">لا يَحِلُّ:</span>
+                <div class="drop-target" data-accept="word-correct2"></div>
+            </div>
+
+            <div class="map-row">
+                <span class="word-label">يَهْجُرُ أَخَاهُ:</span>
+                <div class="drop-target" data-accept="word-correct1"></div>
+            </div>
+        </div>
+
+        <div class="section-box summary">
+            <h3 class="section-title"><i class="fa-solid fa-heart-circle-check"></i> المعنى الإجمالي للحديث</h3>
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #1e88e5; background: white; padding: 15px; border-radius: 15px; border: 1px dashed #64b5f6;">
+                <i class="fa-solid fa-quote-right" style="opacity: 0.3;"></i>
+                نبينا وحبيبنا محمد ﷺ ينهانا في هذا الحديث الشريف عن <strong>(الخصومة والهجر والزعل)</strong>، ويأمرنا دائماً بـ <strong>(الصلح والسلام والابتسامة)</strong> لأن المسلمين إخوة متحابون!
+            </p>
+        </div>
+    </div>
+
+    <div class="quiz-section">
+        <h3 class="quiz-title"><i class="fa-solid fa-puzzle-piece"></i> اختبار الذكاء السريع</h3>
+        
+        <div class="question-card" id="q1-container">
+            <p>1. كم هي المدة التي سمح بها النبي ﷺ كحد أقصى لتهدئة الغضب قبل وجوب الصلح؟</p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'q1', 'wrong')"><i class="fa-regular fa-circle"></i> أسبوع كامل</button>
+                <button class="option-btn" onclick="selectOption(this, 'q1', 'correct')"><i class="fa-regular fa-circle"></i> ثلاث ليالٍ أو أيام</button>
+                <button class="option-btn" onclick="selectOption(this, 'q1', 'wrong')"><i class="fa-regular fa-circle"></i> شهر واحد</button>
+            </div>
+        </div>
+
+        <div class="question-card" id="q2-container">
+            <p>2. مَن هو الشخص الأفضل والأجمل عند الله ورسوله في وقت الخلاف؟</p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'q2', 'correct')"><i class="fa-regular fa-circle"></i> الذي يبدأ بالسلام والصلح أولاً</button>
+                <button class="option-btn" onclick="selectOption(this, 'q2', 'wrong')"><i class="fa-regular fa-circle"></i> الذي ينتظر صديقه ليأتي إليه</button>
+                <button class="option-btn" onclick="selectOption(this, 'q2', 'wrong')"><i class="fa-regular fa-circle"></i> الذي يصرخ بصوت أعلى</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-area">
+        <button class="btn-submit" onclick="validateGame()"><i class="fa-solid fa-check-double"></i> تأكيد إجابات بطل السلام!</button>
+        <div class="result-box" id="resultBox"></div>
+    </div>
+</div>
+
+<script>
+    // نظام السحب والإفلات التفاعلي
+    const draggables = document.querySelectorAll('.drag-word');
+    const dropTargets = document.querySelectorAll('.drop-target');
+    let currentDragging = null;
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            currentDragging = draggable;
+            draggable.style.opacity = '0.5';
+        });
+        draggable.addEventListener('dragend', () => {
+            currentDragging = null;
+            draggable.style.opacity = '1';
+        });
+    });
+
+    dropTargets.forEach(target => {
+        target.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            target.classList.add('hovered');
+        });
+
+        target.addEventListener('dragleave', () => {
+            target.classList.remove('hovered');
+        });
+
+        target.addEventListener('drop', () => {
+            target.classList.remove('hovered');
+            if (currentDragging) {
+                // إذا كان المربع يحتوي بالفعل على عنصر، أعده لبنك الكلمات
+                if (target.children.length > 0) {
+                    document.getElementById('wordsBank').appendChild(target.children[0]);
+                }
+                target.appendChild(currentDragging);
+            }
+        });
+    });
+
+    // اختيار الإجابات في الأسئلة
+    const answers = { q1: null, q2: null };
+
+    function selectOption(button, question, value) {
+        const parent = button.parentElement;
+        const buttons = parent.querySelectorAll('.option-btn');
+        
+        buttons.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.querySelector('i').className = 'fa-regular fa-circle';
+        });
+
+        button.classList.add('selected');
+        button.querySelector('i').className = 'fa-solid fa-circle-dot';
+        answers[question] = value;
+    }
+
+    // التحقق الفيروسي والتشجيعي
+    function validateGame() {
+        let score = 0;
+        let totalItems = 5; // 3 خريطة + 2 أسئلة
+
+        // 1. فحص الخريطة
+        dropTargets.forEach(target => {
+            if (target.firstElementChild && target.firstElementChild.id === target.getAttribute('data-accept')) {
+                score++;
+                target.style.border = "3px solid #4caf50";
+                target.style.background = "#e8f5e9";
+            } else {
+                target.style.border = "3px dashed #f44336";
+                target.style.background = "#ffebee";
+            }
+        });
+
+        // 2. فحص الأسئلة
+        if (answers.q1 === 'correct') score++;
+        if (answers.q2 === 'correct') score++;
+
+        const resultBox = document.getElementById('resultBox');
+        
+        if (score === totalItems) {
+            resultBox.innerHTML = "<span class='bounce' style='color: #2e7d32;'><i class='fa-solid fa-trophy' style='color: #ffb300;'></i> كفوو! أنت بطل السلام الحقيقي وإجابتك كاملة 100%! 🌟🥳</span>";
+            resultBox.style.background = "#e8f5e9";
+            resultBox.style.padding = "15px";
+            resultBox.style.border = "2px dashed #4caf50";
+        } else {
+            resultBox.innerHTML = "<span style='color: #c62828;'><i class='fa-solid fa-wand-magic-sparkles'></i> ممتازة محاولتك! هناك بعض الأخطاء الصغيرة، حاول مجدداً لتصبح بطلاً! 🚀</span>";
+            resultBox.style.background = "#ffebee";
+            resultBox.style.padding = "15px";
+            resultBox.style.border = "2px dashed #f44336";
+        }
+    }
+</script>
+
+</body>
+</html>
