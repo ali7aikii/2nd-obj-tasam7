@@ -173,64 +173,6 @@
             transform: scale(1.05);
         }
 
-        /* قسم الأسئلة */
-        .quiz-section {
-            background: #fff3e0;
-            border: 3px dashed #ffcc80;
-            border-radius: 25px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .quiz-title {
-            color: #e65100;
-            font-size: 1.4rem;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .question-card {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border: 2px solid #ffe0b2;
-        }
-
-        .question-card p { margin: 0 0 10px 0; font-weight: bold; color: #424242; font-size: 1.1rem; }
-
-        .options-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            background: #fafafa;
-            border: 2px solid #e0e0e0;
-            padding: 10px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: right;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .option-btn:hover { background: #f5f5f5; border-color: #bdbdbd; }
-        
-        .option-btn.selected {
-            background: #e0f7fa;
-            border-color: #00bcd4;
-            color: #006064;
-        }
-
         /* زر التأكيد والنتيجة */
         .submit-area {
             text-align: center;
@@ -279,11 +221,11 @@
     <div class="words-bank" id="wordsBank">
         <div class="drag-word" draggable="true" id="word-correct1"><i class="fa-solid fa-handshake-slash"></i> يخاصمه ويقاطعه</div>
         <div class="drag-word" draggable="true" id="word-correct2"><i class="fa-solid fa-ban"></i> لا يجوز شرعاً</div>
-        <div class="drag-word" draggable="true" id="word-correct3"><i class="fa-solid fa-arrows-left-right"></i> يُعرِض ويَصُدّ</div>
+        <div class="drag-word" draggable="true" id="word-correct3"><i class="fa-solid fa-arrows-left-right"></i> يَصُدّ</div>
     </div>
 
     <div class="map-grid">
-        <div class="section-box">
+        <div class="section-box" style="grid-column: 1 / -1; max-width: 100%;">
             <h3 class="section-title"><i class="fa-solid fa-circle-info"></i> ملخص معاني الكلمات</h3>
             
             <div class="map-row">
@@ -302,34 +244,12 @@
             </div>
         </div>
 
-        <div class="section-box summary">
+        <div class="section-box summary" style="grid-column: 1 / -1; max-width: 100%;">
             <h3 class="section-title"><i class="fa-solid fa-heart-circle-check"></i> المعنى الإجمالي للحديث</h3>
-            <p style="font-size: 1.1rem; line-height: 1.6; color: #1e88e5; background: white; padding: 15px; border-radius: 15px; border: 1px dashed #64b5f6;">
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #1e88e5; background: white; padding: 15px; border-radius: 15px; border: 1px dashed #64b5f6; margin: 0;">
                 <i class="fa-solid fa-quote-right" style="opacity: 0.3;"></i>
                 نبينا وحبيبنا محمد ﷺ ينهانا في هذا الحديث الشريف عن <strong>(الخصومة والهجر والزعل)</strong>، ويأمرنا دائماً بـ <strong>(الصلح والسلام والابتسامة)</strong> لأن المسلمين إخوة متحابون!
             </p>
-        </div>
-    </div>
-
-    <div class="quiz-section">
-        <h3 class="quiz-title"><i class="fa-solid fa-puzzle-piece"></i> اختبار الذكاء السريع</h3>
-        
-        <div class="question-card" id="q1-container">
-            <p>1. كم هي المدة التي سمح بها النبي ﷺ كحد أقصى لتهدئة الغضب قبل وجوب الصلح؟</p>
-            <div class="options-group">
-                <button class="option-btn" onclick="selectOption(this, 'q1', 'wrong')"><i class="fa-regular fa-circle"></i> أسبوع كامل</button>
-                <button class="option-btn" onclick="selectOption(this, 'q1', 'correct')"><i class="fa-regular fa-circle"></i> ثلاث ليالٍ أو أيام</button>
-                <button class="option-btn" onclick="selectOption(this, 'q1', 'wrong')"><i class="fa-regular fa-circle"></i> شهر واحد</button>
-            </div>
-        </div>
-
-        <div class="question-card" id="q2-container">
-            <p>2. مَن هو الشخص الأفضل والأجمل عند الله ورسوله في وقت الخلاف؟</p>
-            <div class="options-group">
-                <button class="option-btn" onclick="selectOption(this, 'q2', 'correct')"><i class="fa-regular fa-circle"></i> الذي يبدأ بالسلام والصلح أولاً</button>
-                <button class="option-btn" onclick="selectOption(this, 'q2', 'wrong')"><i class="fa-regular fa-circle"></i> الذي ينتظر صديقه ليأتي إليه</button>
-                <button class="option-btn" onclick="selectOption(this, 'q2', 'wrong')"><i class="fa-regular fa-circle"></i> الذي يصرخ بصوت أعلى</button>
-            </div>
         </div>
     </div>
 
@@ -378,29 +298,12 @@
         });
     });
 
-    // اختيار الإجابات في الأسئلة
-    const answers = { q1: null, q2: null };
-
-    function selectOption(button, question, value) {
-        const parent = button.parentElement;
-        const buttons = parent.querySelectorAll('.option-btn');
-        
-        buttons.forEach(btn => {
-            btn.classList.remove('selected');
-            btn.querySelector('i').className = 'fa-regular fa-circle';
-        });
-
-        button.classList.add('selected');
-        button.querySelector('i').className = 'fa-solid fa-circle-dot';
-        answers[question] = value;
-    }
-
-    // التحقق الفيروسي والتشجيعي
+    // التحقق التشجيعي
     function validateGame() {
         let score = 0;
-        let totalItems = 5; // 3 خريطة + 2 أسئلة
+        let totalItems = 3; // 3 عناصر بالخريطة بعد حذف الأسئلة
 
-        // 1. فحص الخريطة
+        // فحص الخريطة
         dropTargets.forEach(target => {
             if (target.firstElementChild && target.firstElementChild.id === target.getAttribute('data-accept')) {
                 score++;
@@ -412,19 +315,15 @@
             }
         });
 
-        // 2. فحص الأسئلة
-        if (answers.q1 === 'correct') score++;
-        if (answers.q2 === 'correct') score++;
-
         const resultBox = document.getElementById('resultBox');
         
         if (score === totalItems) {
-            resultBox.innerHTML = "<span class='bounce' style='color: #2e7d32;'><i class='fa-solid fa-trophy' style='color: #ffb300;'></i> كفوو! أنت بطل السلام الحقيقي وإجابتك كاملة 100%! 🌟🥳</span>";
+            resultBox.innerHTML = "<span class='bounce' style='color: #2e7d32;'><i class='fa-solid fa-trophy' style='color: #ffb300;'></i> كفوو! أنت بطل السلام الحقيقي وإجابتك كاملة وصحيحة! 🌟🥳</span>";
             resultBox.style.background = "#e8f5e9";
             resultBox.style.padding = "15px";
             resultBox.style.border = "2px dashed #4caf50";
         } else {
-            resultBox.innerHTML = "<span style='color: #c62828;'><i class='fa-solid fa-wand-magic-sparkles'></i> ممتازة محاولتك! هناك بعض الأخطاء الصغيرة، حاول مجدداً لتصبح بطلاً! 🚀</span>";
+            resultBox.innerHTML = "<span style='color: #c62828;'><i class='fa-solid fa-wand-magic-sparkles'></i> ممتازة محاولتك! رتب الكلمات بشكل صحيح لتصبح بطلاً! 🚀</span>";
             resultBox.style.background = "#ffebee";
             resultBox.style.padding = "15px";
             resultBox.style.border = "2px dashed #f44336";
